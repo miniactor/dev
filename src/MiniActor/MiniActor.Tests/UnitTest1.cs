@@ -242,29 +242,4 @@ namespace MiniActor.Tests
             Assert.AreEqual(expectedString, finalString);
         }
     }
-
-    public class MyState
-    {
-        public int StateNumber { set; get; }
-    }
-
-    public class MyMessage
-    {
-        public MyMessage(string name)
-        {
-            Name = name;
-        }
-
-        public string Name { private set; get; }
-    }
-    public class YourMessage
-    {
-        public YourMessage(string name)
-        {
-            Name = name;
-        }
-
-        public string Name { private set; get; }
-    }
-
 }
