@@ -37,22 +37,22 @@ namespace MiniActor
                         };
 
                         Exception e = null;
+                        SuperVision superVision=null;
                         do
                         {
-                            if (e != null)
+                            if (e != null )
                             {
-                                if (workItem.Actor.SuperVision.RetryBackOffType == RetryBackOffType.Linear)
+                                if (superVision.RetryBackOffType == RetryBackOffType.Linear)
                                 {
-                                    await Task.Delay(workItem.Actor.SuperVision.RetryBackOffInterval);
+                                    await Task.Delay(superVision.RetryBackOffInterval);
                                 }
                                 else
                                 {
                                     for (var i = 0; i < retryCount; i++)
                                     {
-                                        await Task.Delay(workItem.Actor.SuperVision.RetryBackOffInterval);
+                                        await Task.Delay(superVision.RetryBackOffInterval);
                                     }
                                 }
-
                             }
                             e = null;
                             try
@@ -63,14 +63,18 @@ namespace MiniActor
                             {
                                 e = ex;
                                 retryCount++;
+                                superVision = workItem.Actor.SuperVision(ex)?? workItem.Actor.DefaultSupervision;
                             }
+                           
+                           
+                           
                         } while (
                         e != null
-                        && workItem.Actor.SuperVision.SuperVisionStrategy == SuperVisionStrategy.Retry
-                        && (retryCount <= workItem.Actor.SuperVision.MaxRetryCount)
+                        &&superVision.SupervisionStrategy == SupervisionStrategy.Retry
+                        && (retryCount <= superVision.MaxRetryCount)
                         );
 
-                        if (e != null)
+                        if (e != null &&superVision.SupervisionStrategy == SupervisionStrategy.IgnoreFailure)
                         {
                             throw e;
                         }

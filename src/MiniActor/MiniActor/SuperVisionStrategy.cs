@@ -1,9 +1,9 @@
 ﻿namespace MiniActor
 {
-    public enum SuperVisionStrategy
+    public enum SupervisionStrategy
     {
         Fail=0,
-        Pass,
+        IgnoreFailure,
         Retry
     }
 }

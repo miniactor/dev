@@ -7,33 +7,34 @@ namespace MiniActor
 {
     public class MiniActor<TMessageType, TResponseType> : AMiniActor<TMessageType, TResponseType>
     {
-        public MiniActor(int workerCount = 1, SuperVision superVision = null) : base( workerCount, superVision)
+        public MiniActor(int workerCount = 1, Func<Exception, SuperVision> superVision = null) : base( workerCount, superVision)
         {
         }
     }
 
     public class MiniActor<TMessageType, TState, TResponseType> : AMiniActor<TMessageType, TState, TResponseType>
     {
-        public MiniActor( int workerCount=1, SuperVision superVision = null) : base(workerCount, superVision)
+        public MiniActor( int workerCount=1, Func<Exception, SuperVision> superVision = null) : base(workerCount, superVision)
         {
         }
     }
     public abstract class AMiniActor<TMessage, TResponse> : AMiniActor<TMessage, object, TResponse>
     {
-        protected AMiniActor(int workerCount, SuperVision superVision) : base(workerCount, superVision)
+        protected AMiniActor(int workerCount, Func<Exception, SuperVision> superVision) : base(workerCount, superVision)
         {
         }
     }
     public abstract class AMiniActor<TMessage, TState, TResponse> : IDisposable
     {
-        private readonly SuperVision _defaultSupervision = new SuperVision();
-      internal  SuperVision SuperVision { set; get; }
+        internal   SuperVision DefaultSupervision = new SuperVision();
+    
+        public Func<Exception, SuperVision> SuperVision;
         internal InternalState<TState> StateInternal = new InternalState<TState>();
         private readonly BlockingCollection<MailMessage<TMessage, TState, TResponse>> _mailBox = new BlockingCollection<MailMessage<TMessage, TState, TResponse>>();
         
-        protected AMiniActor(int workerCount, SuperVision superVision)
+        protected AMiniActor(int workerCount, Func<Exception, SuperVision> superVision)
         {
-            SuperVision = superVision?? _defaultSupervision;
+            SuperVision = superVision;
             for (var i = 0; i < workerCount; i++)
             {
                 Task.Run(async () => await BeginDelivery());
