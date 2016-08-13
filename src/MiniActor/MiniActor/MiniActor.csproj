@@ -43,11 +43,12 @@
     <Compile Include="AMiniActor.cs" />
     <Compile Include="InternalState.cs" />
     <Compile Include="Mail.cs" />
-    <Compile Include="MailBoxWatcher.cs" />
     <Compile Include="MailMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SlimActor.cs" />
+    <Compile Include="RetryBackOffType.cs" />
     <Compile Include="StateHandler.cs" />
+    <Compile Include="SuperVision.cs" />
+    <Compile Include="SuperVisionStrategy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

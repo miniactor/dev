@@ -225,7 +225,7 @@ namespace MiniActor.Tests
                 Assert.IsFalse(done);
                 Assert.IsTrue(result);
             });
-            Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(100)));
+            Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(200)));
             Assert.AreEqual(expectedString, finalString);
         }
 
@@ -254,8 +254,38 @@ namespace MiniActor.Tests
                 Assert.IsFalse(done);
                 Assert.IsTrue(result);
             });
-            Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(100)));
+            Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(200)));
             Assert.AreEqual(expectedString, finalString);
+        }
+        [TestMethod]
+        public void basic_tell_no_state_iteration_no_order_with_many_workers()
+        {
+            Enumerable.Range(2, 10).ToList().ForEach(w =>
+            {
+                const int total = 1000;
+                var actor = new MiniActor<MyMessage, MyState, YourMessage>(w);
+                var range = Enumerable.Range(1, total).ToList();
+                var expectedString = "";
+                range.ForEach(x => expectedString += x);
+
+                var finalString = "";
+
+                range.ForEach(async x =>
+                {
+                    var done = false;
+                    var result = await actor.Tell(new MyMessage(x.ToString()), async (myMessage) =>
+                    {
+                        done = true;
+                        finalString += myMessage.Name;
+                        return await Task.FromResult(new YourMessage("you"));
+                    });
+                    Assert.IsFalse(done);
+                    Assert.IsTrue(result);
+                });
+                Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(100)));
+                Assert.AreNotEqual(expectedString, finalString);
+                actor.Dispose();
+            });
         }
 
         [TestMethod]
