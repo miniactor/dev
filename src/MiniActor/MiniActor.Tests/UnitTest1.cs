@@ -337,6 +337,41 @@ namespace MiniActor.Tests
 
 
         [TestMethod]
+        public void basic_tell_with_no_state_iteration_parallel_no_retry3_test_collision()
+        {
+            const int total = 100;
+            var actor = new MiniActor<MyMessage, MyState, YourMessage>();
+            var range = Enumerable.Range(1, total).ToList();
+            var counter = 0;
+            bool isWorking = false;
+            Parallel.ForEach(range, new ParallelOptions { MaxDegreeOfParallelism = total }, async x =>
+            {
+                var done = false;
+                var result = await actor.Tell(new MyMessage(x.ToString()), async (myMessage) =>
+                {
+                    if (isWorking)
+                    {
+                        throw new Exception();
+                    }
+                    else
+                    {
+                        isWorking = true;
+                    }
+                    await Task.Delay(TimeSpan.FromMilliseconds(5));
+                    counter++;
+                    isWorking = false;
+                    return await Task.FromResult(new YourMessage("you"));
+                });
+                Assert.IsFalse(done, "tell is expected to complete before execution");
+                Assert.IsTrue(result, "tell is expected to succeed");
+            });
+            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(10)));
+            Assert.AreEqual(total, counter);
+        }
+
+
+
+        [TestMethod]
         public void basic_tell_with_no_state_iteration_parallel_no_retry2_supervised()
         {
             var exceptions=new List<Exception>();
