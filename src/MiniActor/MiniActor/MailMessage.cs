@@ -40,6 +40,5 @@ namespace MiniActor
             Actor = actor;
         }
 
-        // public InternalState<TState> State { get; set; }
     }
 }
