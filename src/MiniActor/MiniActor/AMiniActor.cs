@@ -33,15 +33,13 @@ namespace MiniActor
             PrepareMail(command, work, cancelToken);
             return await Task.FromResult(true);
         }
-
-        private TaskCompletionSource<TResponse> PrepareMail(TMessage command, Func<TMessage, StateHandler<TState>, Task<TResponse>> work, CancellationToken? cancelToken)
+        public async Task<bool> Tell(TMessage command
+          , Func<TMessage, Task<TResponse>> work
+          , CancellationToken? cancelToken = null
+          )
         {
-            var tcs = new TaskCompletionSource<TResponse>(command);
-            var mail = new MailMessage<TMessage, TState, TResponse>(command, tcs, work, cancelToken, this)
-            ;
-            _mailBox.Add(mail);
-
-            return tcs;
+            PrepareMail(command, work, cancelToken);
+            return await Task.FromResult(true);
         }
 
         public async Task<TResponse> Ask(TMessage command
@@ -52,6 +50,36 @@ namespace MiniActor
             var tcs = PrepareMail(command, work, cancelToken);
             return await tcs.Task;
         }
+        public async Task<TResponse> Ask(TMessage command
+         , Func<TMessage, Task<TResponse>> work
+         , CancellationToken? cancelToken = null
+         )
+        {
+            var tcs = PrepareMail(command, work, cancelToken);
+            return await tcs.Task;
+        }
+
+
+        private TaskCompletionSource<TResponse> PrepareMail(TMessage command, Func<TMessage, StateHandler<TState>, Task<TResponse>> work, CancellationToken? cancelToken)
+        {
+            var tcs = new TaskCompletionSource<TResponse>(command);
+            var mail = new MailMessage<TMessage, TState, TResponse>(command, tcs, work, cancelToken, this)
+            ;
+            _mailBox.Add(mail);
+
+            return tcs;
+        }
+        private TaskCompletionSource<TResponse> PrepareMail(TMessage command, Func<TMessage, Task<TResponse>> work, CancellationToken? cancelToken)
+        {
+            var tcs = new TaskCompletionSource<TResponse>(command);
+            var mail = new MailMessage<TMessage, TState, TResponse>(command, tcs, work, cancelToken, this)
+            ;
+            _mailBox.Add(mail);
+
+            return tcs;
+        }
+
+
 
         private async Task BeginDelivery()
         {
