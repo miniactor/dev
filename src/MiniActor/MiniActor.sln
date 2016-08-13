@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniActor", "MiniActor\MiniActor.csproj", "{878FCDFF-E9FA-4BDB-B55A-32D2F6F5FFD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniActor.Tests", "MiniActor.Tests\MiniActor.Tests.csproj", "{46F6E81D-FBB3-491C-8BEC-93A1AE7F4745}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{878FCDFF-E9FA-4BDB-B55A-32D2F6F5FFD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878FCDFF-E9FA-4BDB-B55A-32D2F6F5FFD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878FCDFF-E9FA-4BDB-B55A-32D2F6F5FFD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878FCDFF-E9FA-4BDB-B55A-32D2F6F5FFD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46F6E81D-FBB3-491C-8BEC-93A1AE7F4745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46F6E81D-FBB3-491C-8BEC-93A1AE7F4745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46F6E81D-FBB3-491C-8BEC-93A1AE7F4745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46F6E81D-FBB3-491C-8BEC-93A1AE7F4745}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
