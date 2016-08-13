@@ -342,7 +342,6 @@ namespace MiniActor.Tests
             var exceptions=new List<Exception>();
             const int total = 1000;
             var actor = new MiniActor<MyMessage, MyState, YourMessage>(
-                1,
                 (exception) =>
                 {
                     exceptions.Add(exception);
@@ -385,7 +384,6 @@ namespace MiniActor.Tests
             {
                 var done = false;
                 var actor = new MiniActor<MyMessage, MyState, YourMessage>(
-               1,
                (exception) =>
                {
                    exceptions.Add(exception);

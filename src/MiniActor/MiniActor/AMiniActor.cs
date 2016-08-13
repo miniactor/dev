@@ -10,11 +10,17 @@ namespace MiniActor
         public MiniActor(int workerCount = 1, Func<Exception, SuperVision> superVision = null) : base( workerCount, superVision)
         {
         }
+        public MiniActor( Func<Exception, SuperVision> superVision , int workerCount = 1) : base(workerCount, superVision)
+        {
+        }
     }
 
     public class MiniActor<TMessageType, TState, TResponseType> : AMiniActor<TMessageType, TState, TResponseType>
     {
         public MiniActor( int workerCount=1, Func<Exception, SuperVision> superVision = null) : base(workerCount, superVision)
+        {
+        }
+        public MiniActor( Func<Exception, SuperVision> superVision , int workerCount = 1) : base(workerCount, superVision)
         {
         }
     }
