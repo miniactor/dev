@@ -200,6 +200,30 @@ namespace MiniActor.Tests
             Assert.AreEqual(expectedString, finalString);
         }
 
+
+        [TestMethod]
+        public void basic_tell_with_state_iteration_parallel_no_retry()
+        {
+            const int total = 100000;
+            var actor = new MiniActor<MyMessage, MyState, YourMessage>();
+            var range = Enumerable.Range(1, total).ToList();
+            var counter = 0;
+            Parallel.ForEach( range, new ParallelOptions { MaxDegreeOfParallelism = total }, async x =>
+            {
+                var done = false;
+                var result = await actor.Tell(new MyMessage(x.ToString()), async (myMessage, stateHandler) =>
+                {
+                    counter++;
+                    return await Task.FromResult(new YourMessage("you"));
+                });
+                Assert.IsFalse(done);
+                Assert.IsTrue(result);
+            });
+            Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(100)));
+            Assert.AreEqual(total, counter);
+        }
+
+
         [TestMethod]
         public void basic_ask_with_state_iteration_keeping_order()
         {
