@@ -19,6 +19,22 @@ namespace MiniActor.Tests
                 {
                     _result += m;
                     _counterAct++;
+                    Context.Messanger.Tell<AnotherActor>("hey what?");
+                });
+
+                Receive<Guid>(m =>
+                {
+                  
+                });
+            }
+        }
+        public class AnotherActor : MiniActor
+        {
+            public AnotherActor()
+            {
+                Receive<string>(m =>
+                {
+                    Context.Sender.Tell(Guid.NewGuid());
                 });
             }
         }
@@ -27,7 +43,8 @@ namespace MiniActor.Tests
         public void actor_test2()
         {
             var messanger = new MiniActorMessanger();
-            const int total = 20000;
+           // const int total = 20000;
+            const int total = 20;
             string result = "";
             foreach (var i in Enumerable.Range(0, total))
             {
@@ -40,7 +57,7 @@ namespace MiniActor.Tests
                 counter++;
                 try
                 {
-                    Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(1)));
+                    Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(1000000)));
                     Assert.AreEqual(total, _counterAct);
                     break;
                 }
