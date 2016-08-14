@@ -16,6 +16,7 @@ namespace MiniActor.Tests
             private string State { set; get; }
             public SomeActor()
             {
+               
                 Receive<string>(message =>
                 {
                     State = State ?? "";
@@ -33,6 +34,7 @@ namespace MiniActor.Tests
             }
         }
 
+      
         //minimally tested
         [TestMethod]
         public void actor_test()
