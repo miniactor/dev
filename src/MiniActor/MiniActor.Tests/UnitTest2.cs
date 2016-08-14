@@ -9,13 +9,15 @@ namespace MiniActor.Tests
     public class UnitTest2
     {
         private static int _counterAct = 0;
+        private static string _result = "";
 
         public class SomeActor : MiniActor
         {
             public SomeActor()
             {
-                Receive<Guid>(m =>
+                Receive<string>(m =>
                 {
+                    _result += m;
                     _counterAct++;
                 });
             }
@@ -25,10 +27,12 @@ namespace MiniActor.Tests
         public void actor_test2()
         {
             var messanger = new MiniActorMessanger();
-            const int total = 100000;
+            const int total = 20000;
+            string result = "";
             foreach (var i in Enumerable.Range(0, total))
             {
-                messanger.Tell<SomeActor>(Guid.NewGuid());
+                result += i.ToString();
+                messanger.Tell<SomeActor>(i.ToString());
             }
             var counter = 0;
             foreach (var i in Enumerable.Range(0, total))
@@ -46,6 +50,7 @@ namespace MiniActor.Tests
                 }
             }
             Assert.IsTrue(counter < total);
+            Assert.AreEqual(result, _result);
 
         }
     }
