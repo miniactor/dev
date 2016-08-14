@@ -63,7 +63,7 @@ namespace MiniActor
                             {
                                 e = ex;
                                 retryCount++;
-                                superVision = workItem.Actor.SuperVision(ex)?? workItem.Actor.DefaultSupervision;
+                                superVision = workItem.Actor.SuperVision(ex)?? new SuperVision();
                             }
                            
                            

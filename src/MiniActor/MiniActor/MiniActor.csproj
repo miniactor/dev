@@ -44,6 +44,8 @@
     <Compile Include="InternalState.cs" />
     <Compile Include="Mail.cs" />
     <Compile Include="MailMessage.cs" />
+    <Compile Include="MiniActor.cs" />
+    <Compile Include="MiniActorMessanger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetryBackOffType.cs" />
     <Compile Include="StateHandler.cs" />

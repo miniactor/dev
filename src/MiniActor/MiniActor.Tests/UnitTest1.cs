@@ -10,6 +10,41 @@ namespace MiniActor.Tests
     [TestClass]
     public class UnitTest1
     {
+        public class SomeActor : MiniActor
+        {
+            public SomeActor()
+            {
+                Receive<string>(message =>
+                {
+
+                });
+                Receive<int>(message =>
+                {
+
+                });
+            }
+            public override SuperVision Supervision(Exception ex)
+            {
+                return base.Supervision(ex);
+            }
+        }
+
+        //minimally tested
+        [TestMethod]
+        public void actor_test()
+        {
+            var messanger = new MiniActorMessanger();
+            messanger.Tell<SomeActor>("message");
+            messanger.Tell<SomeActor>(5);
+
+            var messanger1 = new MiniActorMessanger();
+            messanger1.Tell<SomeActor>("message");
+
+            var messanger2 = new MiniActorMessanger();
+            messanger2.Tell<SomeActor>(5);
+            Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(1000)));
+        }
+
         [TestMethod]
         public void basic_ask()
         {
@@ -296,17 +331,17 @@ namespace MiniActor.Tests
             var actor = new MiniActor<MyMessage, MyState, YourMessage>();
             var range = Enumerable.Range(1, total).ToList();
             var counter = 0;
-            Parallel.ForEach( range, new ParallelOptions { MaxDegreeOfParallelism = total }, async x =>
-            {
-                var done = false;
-                var result = await actor.Tell(new MyMessage(x.ToString()), async (myMessage, stateHandler) =>
-                {
-                    counter++;
-                    return await Task.FromResult(new YourMessage("you"));
-                });
-                Assert.IsFalse(done,"tell is expected to complete before execution");
-                Assert.IsTrue(result,"tell is expected to succeed");
-            });
+            Parallel.ForEach(range, new ParallelOptions { MaxDegreeOfParallelism = total }, async x =>
+           {
+               var done = false;
+               var result = await actor.Tell(new MyMessage(x.ToString()), async (myMessage, stateHandler) =>
+               {
+                   counter++;
+                   return await Task.FromResult(new YourMessage("you"));
+               });
+               Assert.IsFalse(done, "tell is expected to complete before execution");
+               Assert.IsTrue(result, "tell is expected to succeed");
+           });
             Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(2)));
             Assert.AreEqual(total, counter);
         }
@@ -374,7 +409,7 @@ namespace MiniActor.Tests
         [TestMethod]
         public void basic_tell_with_no_state_iteration_parallel_no_retry2_supervised()
         {
-            var exceptions=new List<Exception>();
+            var exceptions = new List<Exception>();
             const int total = 1000;
             var actor = new MiniActor<MyMessage, MyState, YourMessage>(
                 (exception) =>
@@ -388,9 +423,9 @@ namespace MiniActor.Tests
             Parallel.ForEach(range, new ParallelOptions { MaxDegreeOfParallelism = total }, async x =>
             {
                 var done = false;
-                var result = await actor.Tell(new MyMessage(x.ToString()), async (myMessage,handler) =>
+                var result = await actor.Tell(new MyMessage(x.ToString()), async (myMessage, handler) =>
                 {
-                   var state= handler.GetState();
+                    var state = handler.GetState();
                     if (state == null)
                     {
                         handler.SetState(new MyState());
@@ -412,34 +447,34 @@ namespace MiniActor.Tests
         {
             var exceptions = new List<Exception>();
             const int total = 4;
-           
+
             var range = Enumerable.Range(1, total).ToList();
             var counter = 0;
-            Parallel.ForEach(range, new ParallelOptions { MaxDegreeOfParallelism = total },  x =>
-            {
-                var done = false;
-                var actor = new MiniActor<MyMessage, MyState, YourMessage>(
-               (exception) =>
+            Parallel.ForEach(range, new ParallelOptions { MaxDegreeOfParallelism = total }, x =>
+           {
+               var done = false;
+               var actor = new MiniActor<MyMessage, MyState, YourMessage>(
+              (exception) =>
+              {
+                  exceptions.Add(exception);
+                  return new SuperVision(SupervisionStrategy.Retry, 10, TimeSpan.FromMilliseconds(1),
+                      RetryBackOffType.Linear);
+              });
+               var result = actor.Tell(new MyMessage(x.ToString()), async (myMessage, handler) =>
                {
-                   exceptions.Add(exception);
-                   return new SuperVision(SupervisionStrategy.Retry, 10, TimeSpan.FromMilliseconds(1),
-                       RetryBackOffType.Linear);
+                   var state = handler.GetState();
+                   if (state == null)
+                   {
+                       handler.SetState(new MyState());
+                       throw new Exception();
+                   }
+                   counter++;
+                   return await Task.FromResult(new YourMessage("you"));
                });
-                var result =  actor.Tell(new MyMessage(x.ToString()), async (myMessage, handler) =>
-                {
-                    var state = handler.GetState();
-                    if (state == null)
-                    {
-                        handler.SetState(new MyState());
-                        throw new Exception();
-                    }
-                    counter++;
-                    return await Task.FromResult(new YourMessage("you"));
-                });
-                Assert.IsFalse(done, "tell is expected to complete before execution");
-                Task.WaitAll(result);
-                Assert.IsTrue(result.Result, "tell is expected to succeed");
-            });
+               Assert.IsFalse(done, "tell is expected to complete before execution");
+               Task.WaitAll(result);
+               Assert.IsTrue(result.Result, "tell is expected to succeed");
+           });
             Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(5)));
             Task.WaitAll(Task.Delay(TimeSpan.FromSeconds(5)));
             Assert.AreEqual(total, counter);

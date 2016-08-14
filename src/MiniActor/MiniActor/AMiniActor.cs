@@ -1,40 +1,18 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MiniActor
 {
-    public class MiniActor<TMessageType, TResponseType> : AMiniActor<TMessageType, TResponseType>
-    {
-        public MiniActor(int workerCount = 1, Func<Exception, SuperVision> superVision = null) : base( workerCount, superVision)
-        {
-        }
-        public MiniActor( Func<Exception, SuperVision> superVision , int workerCount = 1) : base(workerCount, superVision)
-        {
-        }
-    }
 
-    public class MiniActor<TMessageType, TState, TResponseType> : AMiniActor<TMessageType, TState, TResponseType>
-    {
-        public MiniActor( int workerCount=1, Func<Exception, SuperVision> superVision = null) : base(workerCount, superVision)
-        {
-        }
-        public MiniActor( Func<Exception, SuperVision> superVision , int workerCount = 1) : base(workerCount, superVision)
-        {
-        }
-    }
-    public abstract class AMiniActor<TMessage, TResponse> : AMiniActor<TMessage, object, TResponse>
-    {
-        protected AMiniActor(int workerCount, Func<Exception, SuperVision> superVision) : base(workerCount, superVision)
-        {
-        }
-    }
+
     public abstract class AMiniActor<TMessage, TState, TResponse> : IDisposable
     {
-        internal   SuperVision DefaultSupervision = new SuperVision();
+       // internal   SuperVision DefaultSupervision = new SuperVision();
     
-        public Func<Exception, SuperVision> SuperVision;
+        internal Func<Exception, SuperVision> SuperVision;
         internal InternalState<TState> StateInternal = new InternalState<TState>();
         private readonly BlockingCollection<MailMessage<TMessage, TState, TResponse>> _mailBox = new BlockingCollection<MailMessage<TMessage, TState, TResponse>>();
         
@@ -46,6 +24,8 @@ namespace MiniActor
                 Task.Run(async () => await BeginDelivery());
             }
         }
+        
+
 
         public async Task<bool> Tell(TMessage command
            , Func<TMessage, StateHandler<TState>, Task<TResponse>> work
@@ -82,7 +62,7 @@ namespace MiniActor
         }
 
 
-        private TaskCompletionSource<TResponse> PrepareMail(TMessage command, Func<TMessage, StateHandler<TState>, Task<TResponse>> work, CancellationToken? cancelToken)
+        protected TaskCompletionSource<TResponse> PrepareMail(TMessage command, Func<TMessage, StateHandler<TState>, Task<TResponse>> work, CancellationToken? cancelToken)
         {
             var tcs = new TaskCompletionSource<TResponse>(command);
             var mail = new MailMessage<TMessage, TState, TResponse>(command, tcs, work, cancelToken, this)
