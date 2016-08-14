@@ -12,15 +12,19 @@ namespace MiniActor.Tests
     {
         public class SomeActor : MiniActor
         {
+            //todo how to persist state within an actor
+            private string State { set; get; }
             public SomeActor()
             {
                 Receive<string>(message =>
                 {
-
+                    State = State ?? "";
+                    State += message;
                 });
                 Receive<int>(message =>
                 {
-
+                    State = State ?? "";
+                    State += message;
                 });
             }
             public override SuperVision Supervision(Exception ex)
