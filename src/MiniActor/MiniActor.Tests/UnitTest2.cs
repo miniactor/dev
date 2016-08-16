@@ -19,7 +19,7 @@ namespace MiniActor.Tests
                 {
                     _result += m;
                     _counterAct++;
-                    Context.Messanger.Tell<AnotherActor>("hey what?");
+                 //   Context.Messanger.Tell<AnotherActor>("hey what?");
                 });
 
                 Receive<Guid>(m =>
@@ -34,7 +34,7 @@ namespace MiniActor.Tests
             {
                 Receive<string>(m =>
                 {
-                    Context.Sender.Tell(Guid.NewGuid());
+                 //   Context.Sender.Tell(Guid.NewGuid());
                 });
             }
         }

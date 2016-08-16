@@ -28,7 +28,7 @@ namespace MiniActor.Tests
                     State += message;
                 });
             }
-            public override SuperVision Supervision(Exception ex)
+            public override Superkision Supervision(Exception ex)
             {
                 return base.Supervision(ex);
             }
@@ -421,7 +421,7 @@ namespace MiniActor.Tests
                 (exception) =>
                 {
                     exceptions.Add(exception);
-                    return new SuperVision(SupervisionStrategy.Retry, 10, TimeSpan.FromMilliseconds(1),
+                    return new Superkision(SupervisionStrategy.Retry, 10, TimeSpan.FromMilliseconds(1),
                         RetryBackOffType.Linear);
                 });
             var range = Enumerable.Range(1, total).ToList();
@@ -463,7 +463,7 @@ namespace MiniActor.Tests
               (exception) =>
               {
                   exceptions.Add(exception);
-                  return new SuperVision(SupervisionStrategy.Retry, 10, TimeSpan.FromMilliseconds(1),
+                  return new Superkision(SupervisionStrategy.Retry, 10, TimeSpan.FromMilliseconds(1),
                       RetryBackOffType.Linear);
               });
                var result = actor.Tell(new MyMessage(x.ToString()), async (myMessage, handler) =>
