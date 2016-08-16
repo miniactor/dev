@@ -12,11 +12,11 @@ namespace MiniActor
     {
        // internal   SuperVision DefaultSupervision = new SuperVision();
     
-        internal Func<Exception, Superkision> SuperVision;
+        internal Func<Exception, Supervision> SuperVision;
         internal InternalState<TState> StateInternal = new InternalState<TState>();
         private readonly BlockingCollection<MailMessage<TMessage, TState, TResponse>> _mailBox = new BlockingCollection<MailMessage<TMessage, TState, TResponse>>();
         
-        protected AMiniActor(int workerCount, Func<Exception, Superkision> superVision)
+        protected AMiniActor(int workerCount, Func<Exception, Supervision> superVision)
         {
             SuperVision = superVision;
             for (var i = 0; i < workerCount; i++)

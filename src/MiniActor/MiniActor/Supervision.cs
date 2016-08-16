@@ -2,9 +2,9 @@
 
 namespace MiniActor
 {
-    public class Superkision
+    public class Supervision
     {
-        public Superkision( SupervisionStrategy supervisionStrategy= SupervisionStrategy.Fail, int maxRetryCount=0, TimeSpan? retryBackOffInterval=null, RetryBackOffType retryBackOffType= RetryBackOffType.Exponential)
+        public Supervision( SupervisionStrategy supervisionStrategy= SupervisionStrategy.Fail, int maxRetryCount=0, TimeSpan? retryBackOffInterval=null, RetryBackOffType retryBackOffType= RetryBackOffType.Exponential)
         {
             RetryBackOffInterval = retryBackOffInterval?? TimeSpan.FromMilliseconds(500);
             RetryBackOffType = retryBackOffType;

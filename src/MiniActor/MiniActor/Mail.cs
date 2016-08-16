@@ -37,7 +37,7 @@ namespace MiniActor
                         };
 
                         Exception e = null;
-                        Superkision supervision=null;
+                        Supervision supervision=null;
                         do
                         {
                             if (e != null )
@@ -63,7 +63,7 @@ namespace MiniActor
                             {
                                 e = ex;
                                 retryCount++;
-                                supervision = workItem.Actor.SuperVision(ex)?? new Superkision();
+                                supervision = workItem.Actor.SuperVision(ex)?? new Supervision();
                             }
                            
                            

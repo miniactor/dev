@@ -49,8 +49,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetryBackOffType.cs" />
     <Compile Include="StateHandler.cs" />
-    <Compile Include="Superkision.cs" />
-    <Compile Include="SuperkisionStrategy.cs" />
+    <Compile Include="Supervision.cs" />
+    <Compile Include="SupervisionStrategy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

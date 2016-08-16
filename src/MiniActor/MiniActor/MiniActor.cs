@@ -37,15 +37,15 @@ namespace MiniActor
             if (myActionT == null) return null;
             else return new Action<object>(o => myActionT((T)o));
         }
-        public virtual Superkision Supervision( Exception ex)
+        public virtual Supervision Supervision( Exception ex)
         {
-            return new Superkision();
+            return new Supervision();
         }
     }
 
     public class MiniActor<TMessageType> : AMiniActor<TMessageType, object>
     {
-        public MiniActor(int workerCount = 1, Func<Exception, Superkision> superVision = null) : base(workerCount, superVision)
+        public MiniActor(int workerCount = 1, Func<Exception, Supervision> superVision = null) : base(workerCount, superVision)
         {
 
         }
@@ -113,26 +113,26 @@ namespace MiniActor
 
     public class MiniActor<TMessageType, TResponseType> : AMiniActor<TMessageType, TResponseType>
     {
-        public MiniActor(int workerCount = 1, Func<Exception, Superkision> superVision = null) : base(workerCount, superVision)
+        public MiniActor(int workerCount = 1, Func<Exception, Supervision> superVision = null) : base(workerCount, superVision)
         {
         }
-        public MiniActor(Func<Exception, Superkision> superVision, int workerCount = 1) : base(workerCount, superVision)
+        public MiniActor(Func<Exception, Supervision> superVision, int workerCount = 1) : base(workerCount, superVision)
         {
         }
     }
 
     public class MiniActor<TMessageType, TState, TResponseType> : AMiniActor<TMessageType, TState, TResponseType>
     {
-        public MiniActor(int workerCount = 1, Func<Exception, Superkision> superVision = null) : base(workerCount, superVision)
+        public MiniActor(int workerCount = 1, Func<Exception, Supervision> superVision = null) : base(workerCount, superVision)
         {
         }
-        public MiniActor(Func<Exception, Superkision> superVision, int workerCount = 1) : base(workerCount, superVision)
+        public MiniActor(Func<Exception, Supervision> superVision, int workerCount = 1) : base(workerCount, superVision)
         {
         }
     }
     public abstract class AMiniActor<TMessage, TResponse> : AMiniActor<TMessage, object, TResponse>
     {
-        protected AMiniActor(int workerCount, Func<Exception, Superkision> superVision) : base(workerCount, superVision)
+        protected AMiniActor(int workerCount, Func<Exception, Supervision> superVision) : base(workerCount, superVision)
         {
         }
     }
